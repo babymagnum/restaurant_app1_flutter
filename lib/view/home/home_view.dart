@@ -8,7 +8,7 @@ import '../../core/theme/theme_text_style.dart';
 
 class HomeView extends StatefulWidget {
 
-  static const routeName = 'container-home-view';
+  static const routeName = 'home_view';
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -21,11 +21,7 @@ class _HomeViewState extends State<HomeView> {
 
   onItemTapped(int index) async {
     if (index == 3) {
-      final sharedPref = await SharedPreferences.getInstance();
-      final isLogin = sharedPref.getBool(Constant.IS_LOGIN) ?? false;
-      if (!isLogin) {
-        //Navigator.of(context).pushNamed(LoginView.routeName);
-      }
+      // do something
     } else {
       setState(() => selectedIndex = index);
     }
