@@ -1,80 +1,93 @@
+import 'package:dribbble_clone/model/drawer_item.dart';
 import 'package:dribbble_clone/view/screen1/screen1_view.dart';
 import 'package:dribbble_clone/view/screen2/screen2_view.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/helper/constant.dart';
-import '../../core/theme/theme_color.dart';
-import '../../core/theme/theme_text_style.dart';
 
 class HomeView extends StatefulWidget {
 
   static const routeName = 'home_view';
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  State<StatefulWidget> createState() {
+    return HomeViewState();
+  }
 }
 
-class _HomeViewState extends State<HomeView> {
+class HomeViewState extends State<HomeView> {
+  final drawerItems = [
+    DrawerItem('Screen 1', Icons.rss_feed),
+    DrawerItem('Screen 2', Icons.local_pizza),
+  ];
+  int _selectedDrawerIndex = 0;
+  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  var selectedIndex = 0;
-  List<Widget> _listScreen = [Screen1View(), Screen2View()];
+  _getDrawerItemWidget(int index) {
+    if (index == 0) return Screen1View();
+    else if (index == 1) return Screen2View();
+  }
 
-  onItemTapped(int index) async {
-    if (index == 3) {
-      // do something
-    } else {
-      setState(() => selectedIndex = index);
-    }
+  _onSelectItem(int index) {
+    setState(() => _selectedDrawerIndex = index);
+    Navigator.of(context).pop(); // close the drawer
   }
 
   @override
   Widget build(BuildContext context) {
+    var drawerOptions = <Widget>[];
+
+    for (var i = 0; i < drawerItems.length; i++) {
+      var d = drawerItems[i];
+      drawerOptions.add(
+        ListTile(
+          leading: Icon(d.icon),
+          title: Text(d.title),
+          selected: i == _selectedDrawerIndex,
+          onTap: () => _onSelectItem(i),
+        )
+      );
+    }
+
+    // Use below code for standart navigation drawer //
+    /*return Scaffold(
+      appBar: AppBar(
+        title: Text(drawerItems[_selectedDrawerIndex].title),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("John Doe"),
+              accountEmail: Text('johndoe@gmail.com')
+            ),
+            Column(children: drawerOptions)
+          ],
+        ),
+      ),
+      body: _getDrawerItemWidget(_selectedDrawerIndex),
+    );*/
+
+    // Use below code if u want to achieve custom ui drawer //
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: _listScreen,
+      key: _drawerKey,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => _drawerKey.currentState.openDrawer() // this code is to use for open the drawer
+        ),
+        title: Text(drawerItems[_selectedDrawerIndex].title),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add,
-              size: 20,
-              color: selectedIndex == 0 ? ThemeColor.orange : ThemeColor.dark_grey,
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("John Doe"),
+              accountEmail: Text('johndoe@gmail.com')
             ),
-            title: Padding(
-              padding: EdgeInsets.only(top: 3),
-              child: Text(
-                'Screen 1',
-                style: ThemeTextStyle.ubuntuR.apply(
-                  fontSizeDelta: -6, color: selectedIndex == 0 ? ThemeColor.orange : ThemeColor.dark_grey,
-                ),
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add,
-              size: 20,
-              color: selectedIndex == 1 ? ThemeColor.orange : ThemeColor.dark_grey,
-            ),
-            title: Padding(
-              padding: EdgeInsets.only(top: 3),
-              child: Text(
-                'Screen 2',
-                style: ThemeTextStyle.ubuntuR.apply(
-                  fontSizeDelta: -6, color: selectedIndex == 1 ? ThemeColor.orange : ThemeColor.dark_grey,
-                ),
-              ),
-            ),
-          ),
-        ],
-        currentIndex: selectedIndex,
-        selectedItemColor: ThemeColor.orange,
-        onTap: onItemTapped,
+            Column(children: drawerOptions)
+          ],
+        ),
       ),
+      body: _getDrawerItemWidget(_selectedDrawerIndex),
     );
   }
 }
