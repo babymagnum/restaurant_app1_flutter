@@ -1,6 +1,6 @@
-# bottom_navbar_flutter_template
+# nav_drawer_flutter_template
 
-This is flutter template for Flutter Bottom Navigation Bar, you can use it for mobile and web but its suite for mobile.
+This is flutter template for Flutter Navigation Drawer, you can use it for mobile and web.
 
 # For web support
 
