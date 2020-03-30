@@ -35,7 +35,7 @@ class OnboardingItemView extends StatelessWidget {
           )
         ),
         Parent(
-          gesture: Gestures()..onTap(() => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginView()))),
+          gesture: Gestures()..onTap(() => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginView()))),
           style: ParentStyle()..ripple(true, splashColor: Colors.white.withAlpha(50))..background.color(Color(0xFFFFBD2F))..borderRadius(all: 6)..boxShadow(color: Color(0xFFFFBD2F).withOpacity(0.2), offset: Offset(1, 6), blur: 3)
             ..padding(vertical: 12)..margin(horizontal: 16),
           child: Center(
